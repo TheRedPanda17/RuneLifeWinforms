@@ -28,7 +28,10 @@ namespace RuneLife
             nameTextbox.Text = _category.Name;
             additionalUnitsTextbox.Text = _category.OtherUnits;
             if (_category.ImageLocation != null && _category.ImageLocation != "")
+            {
                 addIconButton.Text = _category.ImageLocation;
+                _path = _category.ImageLocation;
+            }
 
             flowLayoutPanel1.SizeChanged += Form1_Resize;
             var newButtonSize = new System.Drawing.Size((int)Math.Floor((flowLayoutPanel1.Size.Width - 26) / 2.0), addSkillButton.Size.Height);
