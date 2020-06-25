@@ -42,3 +42,4 @@ C:\Code\RuneLifeWinforms\RuneLife\RuneLife\obj\Debug\RuneLife.application
 C:\Code\RuneLifeWinforms\RuneLife\RuneLife\obj\Debug\RuneLife.csproj.CopyComplete
 C:\Code\RuneLifeWinforms\RuneLife\RuneLife\obj\Debug\RuneLife.exe
 C:\Code\RuneLifeWinforms\RuneLife\RuneLife\obj\Debug\RuneLife.pdb
+C:\Code\RuneLifeWinforms\RuneLife\RuneLife\obj\Debug\RuneLife.SettingsForm.resources

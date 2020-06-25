@@ -13,18 +13,28 @@ namespace RuneLife.models
         public string OtherUnits { get; set; }
         public string ImageLocation { get; set; }
         public List<ProgressItem> ProgressItems { get; set; }
-        public DateTime LastUpdated 
+        public DateTime LastUpdated => ProgressItems.Count > 0 ? ProgressItems.Last().Date : new DateTime();
+        public string TotalOtherString => TotalOther.ToString() + " " + OtherUnits;
+        public string LevelString => Level.ToString() + " / 99";
+        public Bitmap Image => ImageLocation == null || ImageLocation == ""
+            ? Properties.Resources.Logo
+            : new Bitmap(ImageLocation);
+        public string TimeToNextLevel
         {
             get
             {
-                return ProgressItems.Count > 0 ? ProgressItems.Last().Date : new DateTime();
-            } 
-        }
-        public string TotalOtherString
-        {
-            get
-            {
-                return TotalOther.ToString() + " " + OtherUnits;
+                var totalXp = 0.0;
+                var timeToNextLevel = 1.0;
+                for (int i = 1; i <= Level; i++)
+                {
+                    timeToNextLevel *= 1.067302;
+                    totalXp += timeToNextLevel;
+                }
+
+                var timeLeft = totalXp - TotalTime;
+                var ts = TimeSpan.FromHours(timeLeft);
+
+                return $"{Math.Floor(ts.TotalHours)} Hours, {ts.Minutes} Minutes";
             }
         }
         public double TotalTime
@@ -49,22 +59,6 @@ namespace RuneLife.models
                 foreach (var item in ProgressItems)
                     totalProgressOther += item.AdditionalInfo;
                 return totalProgressOther;
-            }
-        }
-        public string LevelString
-        {
-            get
-            {
-                return Level.ToString() + " / 99";
-            }
-        }
-        public Bitmap Image
-        {
-            get
-            {
-                return ImageLocation == null || ImageLocation == ""
-                    ? Properties.Resources.Logo
-                    : new Bitmap(ImageLocation);
             }
         }
         public int Level
@@ -100,6 +94,7 @@ namespace RuneLife.models
                 });
             return category;
         }
+        private const double LEVEL_PERCENT = 1.067302;
         public Category() { }
         public Category(string name, List<ProgressItem> progress)
         {

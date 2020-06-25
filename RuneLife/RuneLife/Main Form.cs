@@ -14,6 +14,7 @@ namespace RuneLife
         private List<Category> categories = new List<Category>();
         private BindingSource bindingSource1 = new BindingSource();
         private string openFilePath = "";
+        private const int REMAINING_PROGRESS_INDEX = 3;
         public RuneLifeMain(string path)
         {
             InitializeComponent();
@@ -58,7 +59,10 @@ namespace RuneLife
         {
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
-                openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                openFileDialog.InitialDirectory =
+                    Properties.Settings.Default.DefaultDirectory == null || Properties.Settings.Default.DefaultDirectory == ""
+                        ? Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+                        : Properties.Settings.Default.DefaultDirectory;
                 openFileDialog.Filter = "RuneLife File|*.rnlf";
 
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
@@ -104,6 +108,10 @@ namespace RuneLife
             saveDialog.Filter = "RuneLife File|*.rnlf";
             saveDialog.FilterIndex = 2;
             saveDialog.RestoreDirectory = true;
+            saveDialog.InitialDirectory =
+                Properties.Settings.Default.DefaultDirectory == null || Properties.Settings.Default.DefaultDirectory == ""
+                    ? Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+                    : Properties.Settings.Default.DefaultDirectory;
 
             if (saveDialog.ShowDialog() == DialogResult.OK)
             {
@@ -228,10 +236,13 @@ namespace RuneLife
         {
             categories = JsonConvert.DeserializeObject<List<Category>>(jsonString);
             bindingSource1 = new BindingSource();
+
+            int i = 0;
             foreach (var category in categories)
             {
                 category.ProgressItems = category.ProgressItems.OrderBy(x => x.Date).ToList();
                 bindingSource1.Add(category);
+                i++;
             }
             dataGridView1.DataSource = bindingSource1;
         }
@@ -268,6 +279,12 @@ namespace RuneLife
             column.Name = "Level";
             dataGridView1.Columns.Add(column);
 
+            column = new DataGridViewTextBoxColumn();
+            column.DataPropertyName = "TimeToNextLevel";
+            column.Name = "Time To Next Level";
+            column.Visible = Properties.Settings.Default.ShowRemainingProgress;
+            dataGridView1.Columns.Add(column);
+
             // Initialize and add a text box column.
             column = new DataGridViewTextBoxColumn();
             column.DataPropertyName = "TotalTime";
@@ -285,6 +302,15 @@ namespace RuneLife
             column.DataPropertyName = "LastUpdated";
             column.Name = "Last Progress";
             dataGridView1.Columns.Add(column);
+        }
+
+        private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using(SettingsForm settingsForm = new SettingsForm())
+            {
+                settingsForm.ShowDialog();
+                dataGridView1.Columns[REMAINING_PROGRESS_INDEX].Visible = Properties.Settings.Default.ShowRemainingProgress;
+            }
         }
     }
 }
