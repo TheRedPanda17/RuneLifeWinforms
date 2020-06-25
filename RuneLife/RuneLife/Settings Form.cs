@@ -17,6 +17,13 @@ namespace RuneLife
         public SettingsForm()
         {
             InitializeComponent();
+
+            _showRemainingProgress = Properties.Settings.Default.ShowRemainingProgress;
+            showRemainingProgress.Checked = _showRemainingProgress;
+            _path = Properties.Settings.Default.DefaultDirectory;
+            defaultDirectory.Text = "Default Directory: " + (_path == null || _path == ""
+                ? "N/A"
+                : _path);
         }
 
         private void defaultDirectory_Click(object sender, EventArgs e)
@@ -41,6 +48,7 @@ namespace RuneLife
         {
             Properties.Settings.Default.ShowRemainingProgress = _showRemainingProgress;
             Properties.Settings.Default.DefaultDirectory = _path;
+            Properties.Settings.Default.Save();
             this.Close();
         }
     }
