@@ -14,7 +14,7 @@ namespace RuneLife
         private List<Category> categories = new List<Category>();
         private BindingSource bindingSource1 = new BindingSource();
         private string openFilePath = "";
-        public RuneLifeMain(string text)
+        public RuneLifeMain(string path)
         {
             InitializeComponent();
 
@@ -24,6 +24,10 @@ namespace RuneLife
             flowLayoutPanel1.SizeChanged += Form1_Resize;
 
             createColumns();
+
+            openFilePath = path;
+
+            var text = File.ReadAllText(path);
 
             fillJsonObjects(text);
         }

@@ -21,8 +21,7 @@ namespace RuneLife
             string[] args = Environment.GetCommandLineArgs();
             if (args.Length > 1 && args[1] != null)
             {
-                string text = File.ReadAllText(args[1]);
-                Application.Run(new RuneLifeMain(text));
+                Application.Run(new RuneLifeMain(args[1]));
             }
             else
                 Application.Run(new RuneLifeMain());
